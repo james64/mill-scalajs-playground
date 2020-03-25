@@ -1,7 +1,7 @@
 package example
 import scala.scalajs.js.annotation.{JSExport, JSExportTopLevel}
 import org.scalajs.dom
-import org.scalajs.dom.html
+import org.scalajs.dom.{html, window, document}
 import scala.util.Random
 
 case class Point(x: Int, y: Int) {
@@ -16,13 +16,20 @@ object ScalaJSExample {
     val ctx = canvas.getContext("2d")
       .asInstanceOf[dom.CanvasRenderingContext2D]
 
+    val winWidth  = Math.max(document.documentElement.clientWidth, window.innerWidth.toInt)
+    val winHeight = Math.max(document.documentElement.clientHeight, window.innerHeight.toInt)
+
+    ctx.canvas.width = winWidth
+    ctx.canvas.height = winHeight
+
     var count = 0
     var p = Point(0, 0)
-    val corners = Seq(Point(255, 255), Point(0, 255), Point(128, 0))
+    val br = Point(winWidth, winHeight)
+    val corners = Seq(br, Point(0, br.y), Point(br.x/2, 0))
 
     def clear() = {
       ctx.fillStyle = "black"
-      ctx.fillRect(0, 0, 255, 255)
+      ctx.fillRect(0, 0, br.x, br.y)
     }
 
     def run = for (i <- 0 until 10){
